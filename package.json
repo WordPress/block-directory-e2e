@@ -1,0 +1,22 @@
+{
+  "name": "Block-Directory-E2E-Tests",
+  "version": "1.0.0",
+  "description": "Runs minimal tests for block directory plugins",
+  "main": "index.js",
+  "scripts": {
+    "test:e2e:interactive": "npm run test:e2e -- --puppeteer-interactive",
+    "test:e2e": "wp-scripts test-e2e",
+    "wp-env": "wp-env"
+  },
+  "author": "WordPress.org",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^4.0.0",
+    "@wordpress/env": "^1.5.0"
+  },
+  "devDependencies": {
+    "@wordpress/e2e-test-utils": "^4.9.0",
+    "@wordpress/scripts": "^11.0.0"
+  }
+}
