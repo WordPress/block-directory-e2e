@@ -39,6 +39,7 @@ jobs:
   run_publish:
     runs-on: ubuntu-latest
     needs: run_tests
+    if: always()
     steps:
       - name: WordPress.org Plugin Directory Callback
         run: curl "$API_ENDPOINT" -s -H "$AUTH_HEADER" -H "$CONTENT_TYPE" -d "$POST_PAYLOAD"
