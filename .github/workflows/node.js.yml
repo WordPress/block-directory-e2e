@@ -1,0 +1,39 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Block Health Check
+
+on: repository_dispatch
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    outputs:
+      success: ${{ steps.testRunDirectory.outputs.success }}
+      error: ${{ steps.testRunDirectory.outputs.error }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Block Testing Framework
+      run: npm ci
+    - name: Configure & Start Environment
+      run: npm run wp-env start
+    - name: Modify plugins folder permissions
+      run: docker exec -t $( docker ps -qf "name=tests" ) chmod -R 767 /var/www/html/wp-content
+    - name: Run End to End Tests
+      id: testRunDirectory
+      run: npm run test:e2e
+
+  # This will post to an endpoint in the future.
+  # run_publish:
+  #   runs-on: ubuntu-latest
+  #   needs: run_tests
+  #   steps:
+  #   - run: curl -H "Authorization: token ${{ secrets.POST_SECRET }}" "https://wordpress.org/plugins/wp-json/plugins/v1/plugin/${{ github.event.client_payload.slug }}/block-e2e-data" -d '{ "success": ${{needs.build.outputs.success}}, "error": ${{needs.build.outputs.error}} }'
+
