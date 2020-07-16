@@ -6,5 +6,5 @@
 		"FS_METHOD": "direct"
 	},
 	"core": "WordPress/WordPress#master",
-	"plugins": [ "WordPress/gutenberg#master" ]
+	"plugins": []
 }
