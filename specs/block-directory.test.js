@@ -93,7 +93,7 @@ describe( `Block Directory Tests`, () => {
 			done();
 		} catch ( e ) {
 			core.setFailed( e );
-			core.setOutput( 'error', e );
+			core.setOutput( 'error', e.message );
 			core.setOutput( 'success', false );
 			done();
 		}
