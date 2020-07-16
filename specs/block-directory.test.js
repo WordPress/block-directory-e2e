@@ -49,7 +49,7 @@ describe( `Block Directory Tests`, () => {
 		await removeAllBlocks();
 	} );
 
-	it( 'Block returns from API and installs', async () => {
+	it( 'Block returns from API and installs', async ( done ) => {
 		try {
 			await searchForBlock( searchTerm );
 
@@ -89,12 +89,13 @@ describe( `Block Directory Tests`, () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
 
-			core.setOutput( 'success', true );
+            core.setOutput( 'success', true );
+            done();
 		} catch ( e ) {
 			core.setFailed( e );
 			core.setOutput( 'error', e );
-			core.setOutput( 'success', false );
-			throw new Error();
+            core.setOutput( 'success', false );
+            done();
 		}
 	} );
 } );
