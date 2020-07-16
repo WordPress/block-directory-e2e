@@ -30,10 +30,13 @@ jobs:
       id: testRunDirectory
       run: npm run test:e2e
 
-  # This will post to an endpoint in the future.
-  # run_publish:
-  #   runs-on: ubuntu-latest
-  #   needs: run_tests
-  #   steps:
-  #   - run: curl -H "Authorization: token ${{ secrets.POST_SECRET }}" "https://wordpress.org/plugins/wp-json/plugins/v1/plugin/${{ github.event.client_payload.slug }}/block-e2e-data" -d '{ "success": ${{needs.build.outputs.success}}, "error": ${{needs.build.outputs.error}} }'
-
+  run_publish:
+    runs-on: ubuntu-latest
+    needs: run_tests
+    steps:
+      - name: WordPress.org Plugin Directory Callback
+        run: curl "$API_ENDPOINT" -H "$AUTH_HEADER" -d "$JSON_PAYLOAD"
+        env:
+          API_ENDPOINT: "https://wordpress.org/plugins/wp-json/plugins/v1/plugin/${{ github.event.client_payload.slug }}/e2e"
+          AUTH_HEADER: "Authorization: BEARER ${{ secrets.POST_SECRET }}"
+          JSON_PAYLOAD: '{ "success": ${{ needs.run_tests.outputs.success}}, "error": ${{needs.run_tests.outputs.error}} }'
