@@ -89,13 +89,13 @@ describe( `Block Directory Tests`, () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
 
-            core.setOutput( 'success', true );
-            done();
+			core.setOutput( 'success', true );
+			done();
 		} catch ( e ) {
 			core.setFailed( e );
 			core.setOutput( 'error', e );
-            core.setOutput( 'success', false );
-            done();
+			core.setOutput( 'success', false );
+			done();
 		}
 	} );
 } );
