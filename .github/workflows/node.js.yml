@@ -35,8 +35,9 @@ jobs:
     needs: run_tests
     steps:
       - name: WordPress.org Plugin Directory Callback
-        run: curl "$API_ENDPOINT" -H "$AUTH_HEADER" -d "$JSON_PAYLOAD"
+        run: curl "$API_ENDPOINT" -s -H "$AUTH_HEADER" -H "$CONTENT_TYPE" -d "$POST_PAYLOAD"
         env:
           API_ENDPOINT: "https://wordpress.org/plugins/wp-json/plugins/v1/plugin/${{ github.event.client_payload.slug }}/e2e"
           AUTH_HEADER: "Authorization: BEARER ${{ secrets.POST_SECRET }}"
-          JSON_PAYLOAD: '{ "success": ${{ needs.run_tests.outputs.success}}, "error": ${{needs.run_tests.outputs.error}} }'
+          CONTENT_TYPE: "Content-Type: application/json"
+          POST_PAYLOAD: ${{ toJSON( { "success": needs.run_tests.outputs.success, "error": needs.run_tests.outputs.error ) }}"
