@@ -89,6 +89,7 @@ describe( `Block Directory Tests`, () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
 
+			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
 			done();
 		} catch ( e ) {
