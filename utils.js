@@ -40,7 +40,9 @@ export const getAllLoadedScripts = async() => {
 			if ( item.src ) {
 				assets.push( {
 					'id': item.id.replace( /-js$/, '' ),
-					'src': item.src.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' ),
+					'src': item.src
+						.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' )
+						.replace( /[?&]ver=[a-z0-9.-]+/, '' ),
 				} );
 			}
 		} );
@@ -56,7 +58,9 @@ export const getAllLoadedStyles = async() => {
 			if ( item.href ) {
 				assets.push( {
 					'id': item.id.replace( /-css$/, '' ),
-					'src': item.href.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' ),
+					'src': item.href
+						.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' )
+						.replace( /[?&]ver=[a-z0-9.-]+/, '' ),
 				} );
 			}
 		} );
