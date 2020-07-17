@@ -18,7 +18,7 @@ import {
  * Internal dependencies
  */
 
-import { getThirdPartyBlocks, runTest, removeAllBlocks } from '../utils';
+import { getThirdPartyBlocks, runTest, removeAllBlocks, getAllLoadedScripts, getAllLoadedStyles } from '../utils';
 import { waitUntilNetworkIdle } from '../networkIdle';
 
 // We don't want to see warnings during these tests
@@ -73,6 +73,10 @@ describe( `Block Directory Tests`, () => {
 
 			const resp = await finalResponse.json();
 
+			// Determine the loaded assets.
+			const preScripts = await getAllLoadedScripts();
+			const preStyles  = await getAllLoadedStyles();
+
 			runTest( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
 			}, `The search result for "${ searchTerm }" isn't an array.` );
@@ -107,6 +111,17 @@ describe( `Block Directory Tests`, () => {
 			runTest( () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
+
+			await page.reload({ waitUntil: [ "domcontentloaded" ] });
+
+			const postScripts = await getAllLoadedScripts();
+			const postStyles  = await getAllLoadedStyles();
+
+			const scriptDiff = postScripts.filter( x => !preScripts.some( y => ( x.id == y.id ) ) );
+			const styleDiff  = postStyles.filter(  x => !preStyles.some(  y => ( x.id == y.id ) ) );
+
+			core.setOutput( 'scripts', scriptDiff );
+			core.setOutput( 'styles',  styleDiff  );
 
 			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
