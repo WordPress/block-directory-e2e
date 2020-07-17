@@ -132,7 +132,9 @@ describe( `Block Directory Tests`, () => {
 	it( 'Block Installed - Extract Scripts & Styles required', async ( done ) => {
 		// Page reloaded from previous test.
 		runTest( () => {
-			expect( freshScripts && freshStyles ).toBeTruthy();
+			expect( freshScripts.length ).toBeGreaterThan( 0 );
+			expect( freshStyles.length  ).toBeGreaterThan( 0 );
+
 		}, `The previous test did not load scripts/styles.` );
 
 		const loadedScripts = await getAllLoadedScripts();
@@ -140,6 +142,10 @@ describe( `Block Directory Tests`, () => {
 
 		const scriptDiff = loadedScripts.filter( x => !freshScripts.some( y => ( x.id == y.id ) ) );
 		const styleDiff  = loadedStyles.filter(  x => !freshStyles.some(  y => ( x.id == y.id ) ) );
+
+		runTest( () => {
+			expect( scriptDiff.length + styleDiff.length ).toBeGreaterThan( 0 );
+		}, `The Block tested did not load any scripts/styles.` );
 
 		core.setOutput( 'scripts', scriptDiff );
 		core.setOutput( 'styles',  styleDiff  );
