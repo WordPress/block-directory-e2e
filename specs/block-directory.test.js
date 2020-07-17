@@ -127,9 +127,14 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput( 'success', true );
 			done();
 		} catch ( e ) {
-			core.setFailed( e.message );
-			core.setOutput( 'error', jsError || e.message );
+			core.setFailed( e );
+
+			// Set all of the output variables, even if not used.
+			core.setOutput( 'scripts', [] );
+			core.setOutput( 'styles',  [] );
+
 			core.setOutput( 'success', false );
+			core.setOutput( 'error', e.message );
 			done();
 		}
 	} );
