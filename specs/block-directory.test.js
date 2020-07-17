@@ -60,6 +60,9 @@ describe( `Block Directory Tests`, () => {
 		await uninstallPlugin( pluginSlug );
 	} );
 
+	let freshScripts = false;
+	let freshStyles  = false;
+
 	it( 'Block returns from API and installs', async ( done ) => {
 		try {
 			await searchForBlock( searchTerm );
@@ -73,9 +76,9 @@ describe( `Block Directory Tests`, () => {
 
 			const resp = await finalResponse.json();
 
-			// Determine the loaded assets.
-			const preScripts = await getAllLoadedScripts();
-			const preStyles  = await getAllLoadedStyles();
+			// Determine the loaded assets, store it for the next test.
+			freshScripts = await getAllLoadedScripts();
+			freshStyles  = await getAllLoadedStyles();
 
 			runTest( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
@@ -112,30 +115,35 @@ describe( `Block Directory Tests`, () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
 
-			await page.reload({ waitUntil: [ "domcontentloaded" ] });
-
-			const postScripts = await getAllLoadedScripts();
-			const postStyles  = await getAllLoadedStyles();
-
-			const scriptDiff = postScripts.filter( x => !preScripts.some( y => ( x.id == y.id ) ) );
-			const styleDiff  = postStyles.filter(  x => !preStyles.some(  y => ( x.id == y.id ) ) );
-
-			core.setOutput( 'scripts', scriptDiff );
-			core.setOutput( 'styles',  styleDiff  );
-
 			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
 			done();
 		} catch ( e ) {
-			core.setFailed( e );
 
-			// Set all of the output variables, even if not used.
-			core.setOutput( 'scripts', [] );
-			core.setOutput( 'styles',  [] );
+			core.setFailed( e.message );
+			core.setOutput( 'error', jsError || e.message );
 
 			core.setOutput( 'success', false );
-			core.setOutput( 'error', e.message );
+
 			done();
 		}
+	} );
+
+	it( 'Block Installed - Extract Scripts & Styles required', async ( done ) => {
+		// Page reloaded from previous test.
+		runTest( () => {
+			expect( freshScripts && freshStyles ).toBeTruthy();
+		}, `The previous test did not load scripts/styles.` );
+
+		const loadedScripts = await getAllLoadedScripts();
+		const loadedStyles  = await getAllLoadedStyles();
+
+		const scriptDiff = loadedScripts.filter( x => !freshScripts.some( y => ( x.id == y.id ) ) );
+		const styleDiff  = loadedStyles.filter(  x => !freshStyles.some(  y => ( x.id == y.id ) ) );
+
+		core.setOutput( 'scripts', scriptDiff );
+		core.setOutput( 'styles',  styleDiff  );
+
+		done();
 	} );
 } );
