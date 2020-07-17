@@ -37,6 +37,12 @@ const urlMatch = ( url ) => {
 
 const { searchTerm } = github.context.payload.client_payload;
 
+// Variable to hold any encounted JS errors.
+let jsError = false;
+page.on( 'pageerror', error => {
+	jsError = error.toString();
+} );
+
 core.info( `
 --------------------------------------------------------------
 Running Tests for "${ searchTerm }"
@@ -93,8 +99,9 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput( 'success', true );
 			done();
 		} catch ( e ) {
-			core.setFailed( e );
-			core.setOutput( 'error', e.message );
+
+			core.setFailed( e.message );
+			core.setOutput( 'error', jsError || e.message );
 			core.setOutput( 'success', false );
 			done();
 		}
