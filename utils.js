@@ -39,7 +39,7 @@ export const getAllLoadedScripts = async() => {
 		document.querySelectorAll('script').forEach( ( item ) => {
 			if ( item.src ) {
 				assets.push( {
-					'id': item.id,
+					'id': item.id.replace( /-js$/, '' ),
 					'src': item.src.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' ),
 				} );
 			}
