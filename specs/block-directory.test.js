@@ -60,8 +60,8 @@ describe( `Block Directory Tests`, () => {
 		await uninstallPlugin( pluginSlug );
 	} );
 
-	let freshScripts = false;
-	let freshStyles  = false;
+	let freshScripts = [];
+	let freshStyles  = [];
 
 	it( 'Block returns from API and installs', async ( done ) => {
 		try {
@@ -132,7 +132,6 @@ describe( `Block Directory Tests`, () => {
 		runTest( () => {
 			expect( freshScripts.length ).toBeGreaterThan( 0 );
 			expect( freshStyles.length  ).toBeGreaterThan( 0 );
-
 		}, `The previous test did not load scripts/styles.` );
 
 		const loadedScripts = await getAllLoadedScripts();
