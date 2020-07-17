@@ -51,6 +51,8 @@ Running Tests for "${ searchTerm }"
 
 describe( `Block Directory Tests`, () => {
 	beforeEach( async () => {
+		jsError = false;
+
 		await createNewPost();
 		await removeAllBlocks();
 	} );
