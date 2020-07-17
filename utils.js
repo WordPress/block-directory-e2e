@@ -32,3 +32,35 @@ export const runTest = ( func, errorMessage ) => {
 		throw new Error( errorMessage );
 	}
 };
+
+export const getAllLoadedScripts = async() => {
+	return await page.evaluate( () => {
+		let assets = [];
+		document.querySelectorAll('script').forEach( ( item ) => {
+			if ( item.src ) {
+				assets.push( {
+					'id': item.id,
+					'src': item.src.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' ),
+				} );
+			}
+		} );
+
+		return assets;
+	} );
+};
+
+export const getAllLoadedStyles = async() => {
+	return await page.evaluate( () => {
+		let assets = [];
+		document.querySelectorAll('link[rel="stylesheet"]').forEach( ( item ) => {
+			if ( item.href ) {
+				assets.push( {
+					'id': item.id.replace( /-css$/, '' ),
+					'src': item.href.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' ),
+				} );
+			}
+		} );
+
+		return assets;
+	} );
+};
