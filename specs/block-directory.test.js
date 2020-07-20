@@ -91,6 +91,11 @@ describe( `Block Directory Tests`, () => {
 			// Add the block
 			await addBtn.click();
 
+			// We'll wait for the add button to disappear which signals the block was registered
+			await page.waitForSelector(
+				'.block-directory-downloadable-blocks-list li:first-child button'
+			);
+
 			await new Promise( ( resolve ) => setTimeout( resolve, 5000 ) );
 
 			const blocks = await getThirdPartyBlocks();
