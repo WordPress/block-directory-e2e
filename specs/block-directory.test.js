@@ -96,7 +96,7 @@ describe( `Block Directory Tests`, () => {
 				'.block-directory-downloadable-blocks-list li:first-child button'
 			);
 
-			await new Promise( ( resolve ) => setTimeout( resolve, 5000 ) );
+			await new Promise( ( resolve ) => setTimeout( resolve, 10000 ) );
 
 			const blocks = await getThirdPartyBlocks();
 
