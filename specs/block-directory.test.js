@@ -10,20 +10,15 @@ const github = require( '@actions/github' );
 import {
 	createNewPost,
 	searchForBlock,
-	insertBlock,
-	getAllBlocks,
+	deactivatePlugin,
+	uninstallPlugin,
 } from '@wordpress/e2e-test-utils';
 
 /**
  * Internal dependencies
  */
 
-import {
-	getInstalledBlocks,
-	getThirdPartyBlocks,
-	runTest,
-	removeAllBlocks,
-} from '../utils';
+import { getThirdPartyBlocks, runTest, removeAllBlocks } from '../utils';
 
 // We don't want to see warnings during these tests
 console.warn = () => {};
@@ -35,7 +30,9 @@ const urlMatch = ( url ) => {
 	return url.indexOf( urlPart ) >= 0 || url.indexOf( encoded ) >= 0;
 };
 
-const searchTerm =  process.env.SEARCH_TERM || github.context.payload.client_payload.searchTerm;
+const payload = github.context.payload.client_payload;
+const searchTerm = process.env.SEARCH_TERM || payload.searchTerm;
+const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
 
 // Variable to hold any encounted JS errors.
 let jsError = false;
@@ -55,6 +52,11 @@ describe( `Block Directory Tests`, () => {
 
 		await createNewPost();
 		await removeAllBlocks();
+	} );
+
+	afterAll( async () => {
+		await deactivatePlugin( pluginSlug );
+		await uninstallPlugin( pluginSlug );
 	} );
 
 	it( 'Block returns from API and installs', async ( done ) => {
@@ -101,7 +103,6 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput( 'success', true );
 			done();
 		} catch ( e ) {
-
 			core.setFailed( e.message );
 			core.setOutput( 'error', jsError || e.message );
 			core.setOutput( 'success', false );
