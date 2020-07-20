@@ -35,7 +35,7 @@ const urlMatch = ( url ) => {
 	return url.indexOf( urlPart ) >= 0 || url.indexOf( encoded ) >= 0;
 };
 
-const { searchTerm } = github.context.payload.client_payload;
+const searchTerm =  process.env.SEARCH_TERM || github.context.payload.client_payload.searchTerm;
 
 core.info( `
 --------------------------------------------------------------
