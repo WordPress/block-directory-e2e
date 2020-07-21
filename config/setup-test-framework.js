@@ -180,7 +180,14 @@ function observeConsoleLogging() {
 		// See: https://core.trac.wordpress.org/ticket/23165
 		if ( text.includes( 'elements with non-unique id #_wpnonce' ) ) {
 			return;
-		}
+        }
+        
+        // This error can be thrown if an SVG icon does not follow react camelCase format
+        // We can hide it to quiet the noise.
+        if ( text.includes( 'Invalid DOM property' ) ) {
+			return;
+        }
+        
 
 		const logFunction = OBSERVED_CONSOLE_MESSAGE_TYPES[ type ];
 
@@ -214,19 +221,21 @@ function observeConsoleLogging() {
 // Before every test suite run, delete all content created by the test. This ensures
 // other posts/comments/etc. aren't dirtying tests and tests don't depend on
 // each other's side-effects.
-beforeAll( async () => {
+beforeAll( async done => {
 	capturePageEventsForTearDown();
 	enablePageDialogAccept();
 	observeConsoleLogging();
 
 	await trashExistingPosts();
-	await setupBrowser();
+    await setupBrowser();
+    done();
 } );
 
 afterEach( async () => {
 	await setupBrowser();
 } );
 
-afterAll( () => {
-	removePageEvents();
+afterAll( done => {
+    removePageEvents();
+    done();
 } );
