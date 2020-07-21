@@ -42,6 +42,8 @@ const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
 let jsError = false;
 page.on( 'pageerror', error => {
 	jsError = error.toString();
+
+	console.log( error );
 } );
 
 core.info( `
