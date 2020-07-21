@@ -133,15 +133,16 @@ describe( `Block Directory Tests`, () => {
 			expect( freshStyles.length  ).toBeGreaterThan( 0 );
 		}, `The previous test did not load scripts/styles.` );
 
+		const blocks = await getThirdPartyBlocks();
+		runTest( () => {
+			expect( blocks.length ).toBeGreaterThan( 0 );
+		}, `Block not installed.` );
+
 		const loadedScripts = await getAllLoadedScripts();
 		const loadedStyles  = await getAllLoadedStyles();
 
 		const scriptDiff = loadedScripts.filter( x => !freshScripts.some( y => ( x.id == y.id ) ) );
 		const styleDiff  = loadedStyles.filter(  x => !freshStyles.some(  y => ( x.id == y.id ) ) );
-
-		runTest( () => {
-			expect( scriptDiff.length + styleDiff.length ).toBeGreaterThan( 0 );
-		}, `The Block tested did not load any scripts/styles.` );
 
 		core.setOutput( 'scripts', scriptDiff );
 		core.setOutput( 'styles',  styleDiff  );
