@@ -19,6 +19,7 @@ import {
  */
 
 import { getThirdPartyBlocks, runTest, removeAllBlocks } from '../utils';
+import { waitUntilNetworkIdle } from '../networkIdle';
 
 // We don't want to see warnings during these tests
 console.warn = () => {};
@@ -84,24 +85,22 @@ describe( `Block Directory Tests`, () => {
 				expect( resp ).toHaveLength( 1 );
 			}, `We found no matching blocks for "${ searchTerm }" in the directory.` );
 
-			let addBtn = await page.waitForSelector(
-				'.block-directory-downloadable-blocks-list li:first-child button'
-			);
+			const addBtnSelector = '.block-directory-downloadable-blocks-list li:first-child button';
+			let addBtn = await page.waitForSelector( addBtnSelector );
 
-			// Add the block
-			await addBtn.click();
+			// Wait for the Block install and insert to complete.
+			await Promise.all( [
 
-			// We'll wait for the add button to disappear which signals the block was registered
-			await page.waitForSelector(
-				'.block-directory-downloadable-blocks-list li:first-child button',
-				{ hidden: true }
-			);
+				// Add the block
+				addBtn.click(),
 
-			// Wait 500ms to allow all Assets to be loaded. This is overly cautious to avoid issues.
-			await new Promise( resolve => setTimeout( resolve, 500 ) )
+				// Wait for the add button to disappear which signals the block was registered
+				page.waitForSelector( addBtnSelector, { hidden: true } ),
 
-			// Wait for network idle, indicating that the assets are loaded.
-			await page.waitForNavigation( { waitUntil: 'networkidle0' } );
+				// And wait for the Network to go idle (Assets inserted)
+				waitUntilNetworkIdle( 'networkidle0' ),
+
+			] );
 
 			const blocks = await getThirdPartyBlocks();
 
