@@ -4,6 +4,9 @@
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
 
+const promiseAny = require('promise.any');
+promiseAny.shim();
+
 /**
  * WordPress dependencies
  */
