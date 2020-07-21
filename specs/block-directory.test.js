@@ -93,10 +93,15 @@ describe( `Block Directory Tests`, () => {
 
 			// We'll wait for the add button to disappear which signals the block was registered
 			await page.waitForSelector(
-				'.block-directory-downloadable-blocks-list li:first-child button'
+				'.block-directory-downloadable-blocks-list li:first-child button',
+				{ hidden: true }
 			);
 
-			await new Promise( ( resolve ) => setTimeout( resolve, 10000 ) );
+			// Wait 500ms to allow all Assets to be loaded. This is overly cautious to avoid issues.
+			await new Promise( resolve => setTimeout( resolve, 500 ) )
+
+			// Wait for network idle, indicating that the assets are loaded.
+			await page.waitForNavigation( { waitUntil: 'networkidle0' } );
 
 			const blocks = await getThirdPartyBlocks();
 
