@@ -104,8 +104,13 @@ describe( `Block Directory Tests`, () => {
 				// Add the block
 				addBtn.click(),
 
-				// Wait for the add button to disappear which signals the block was registered
-				page.waitForSelector( addBtnSelector, { hidden: true } ),
+				Promise.any( [
+					// Wait for the add button to disappear which signals the block was registered
+					page.waitForSelector( addBtnSelector, { hidden: true } ),
+
+					// or, for the retry "crashed editor" reload button to appear instead.
+					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button' )
+				]),
 
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
@@ -125,7 +130,8 @@ describe( `Block Directory Tests`, () => {
 			core.setFailed( e.message );
 			core.setOutput( 'error', jsError || e.message );
 			core.setOutput( 'success', false );
-			done();
+
+			throw e;
 		}
 	} );
 
