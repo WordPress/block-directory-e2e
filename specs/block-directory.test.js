@@ -119,12 +119,9 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput( 'success', true );
 			done();
 		} catch ( e ) {
-
 			core.setFailed( e.message );
 			core.setOutput( 'error', jsError || e.message );
-
 			core.setOutput( 'success', false );
-
 			done();
 		}
 	} );
