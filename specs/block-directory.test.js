@@ -42,7 +42,7 @@ page.on( 'pageerror', error => {
 
 core.info( `
 --------------------------------------------------------------
-Running Tests for "${ searchTerm }"
+Running Tests for "${ searchTerm }/${ pluginSlug }"
 --------------------------------------------------------------
 ` );
 
