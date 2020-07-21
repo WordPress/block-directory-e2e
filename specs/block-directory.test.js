@@ -18,7 +18,7 @@ import {
  * Internal dependencies
  */
 
-import { getThirdPartyBlocks, runTest, removeAllBlocks } from '../utils';
+import { getThirdPartyBlocks, runTest, removeAllBlocks, getAllLoadedScripts, getAllLoadedStyles } from '../utils';
 import { waitUntilNetworkIdle } from '../networkIdle';
 
 // We don't want to see warnings during these tests
@@ -60,6 +60,9 @@ describe( `Block Directory Tests`, () => {
 		await uninstallPlugin( pluginSlug );
 	} );
 
+	let freshScripts = [];
+	let freshStyles  = [];
+
 	it( 'Block returns from API and installs', async ( done ) => {
 		try {
 			await searchForBlock( searchTerm );
@@ -72,6 +75,10 @@ describe( `Block Directory Tests`, () => {
 			);
 
 			const resp = await finalResponse.json();
+
+			// Determine the loaded assets, store it for the next test.
+			freshScripts = await getAllLoadedScripts();
+			freshStyles  = await getAllLoadedStyles();
 
 			runTest( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
@@ -117,5 +124,29 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput( 'success', false );
 			done();
 		}
+	} );
+
+	it( 'Block Installed - Extract Scripts & Styles required', async ( done ) => {
+		// Page reloaded from previous test.
+		runTest( () => {
+			expect( freshScripts.length ).toBeGreaterThan( 0 );
+			expect( freshStyles.length  ).toBeGreaterThan( 0 );
+		}, `The previous test did not load scripts/styles.` );
+
+		const blocks = await getThirdPartyBlocks();
+		runTest( () => {
+			expect( blocks.length ).toBeGreaterThan( 0 );
+		}, `Block not installed.` );
+
+		const loadedScripts = await getAllLoadedScripts();
+		const loadedStyles  = await getAllLoadedStyles();
+
+		const scriptDiff = loadedScripts.filter( x => !freshScripts.some( y => ( x.id == y.id ) ) );
+		const styleDiff  = loadedStyles.filter(  x => !freshStyles.some(  y => ( x.id == y.id ) ) );
+
+		core.setOutput( 'scripts', scriptDiff );
+		core.setOutput( 'styles',  styleDiff  );
+
+		done();
 	} );
 } );
