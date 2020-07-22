@@ -100,30 +100,23 @@ describe( `Block Directory Tests`, () => {
 			const addBtnSelector = '.block-directory-downloadable-blocks-list li:first-child button';
 			let addBtn = await page.waitForSelector( addBtnSelector );
 
+			// Add the block
+			await addBtn.click();
+
 			// Wait for the Block install and insert to complete.
 			await Promise.all( [
-
-				// Add the block
-				addBtn.click(),
-
 				Promise.any( [
 					// Wait for the add button to disappear which signals the block was registered
 					page.waitForSelector( addBtnSelector, { hidden: true, timeout: 90000 } ),
 
 					// or, for the retry "crashed editor" reload button to appear instead.
 					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button', { timeout: 90000 } )
-				]).catch( e => console.log( e )),
+				]),
 
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
 
 			] )
-
-			const html = await page.$eval('.block-directory-downloadable-blocks-list', (element) => {
-				return element.innerHTML
-			});
-
-			console.log(html)
 
 			const blocks = await getThirdPartyBlocks();
 
