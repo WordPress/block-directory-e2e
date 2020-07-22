@@ -103,20 +103,7 @@ describe( `Block Directory Tests`, () => {
 			// Add the block
 			await addBtn.click();
 
-			// Wait for the Block install and insert to complete.
-			await Promise.all( [
-				Promise.any( [
-					// Wait for the add button to disappear which signals the block was registered
-					page.waitForSelector( addBtnSelector, { hidden: true, timeout: 90000 } ),
-
-					// or, for the retry "crashed editor" reload button to appear instead.
-					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button', { timeout: 90000 } )
-				]),
-
-				// And wait for the Network to go idle (Assets inserted)
-				waitUntilNetworkIdle( 'networkidle0' ),
-
-			] )
+			await waitUntilNetworkIdle( 'networkidle0' );
 
 			const blocks = await getThirdPartyBlocks();
 
