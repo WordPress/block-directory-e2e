@@ -54,10 +54,10 @@ Running Tests for "${ searchTerm }/${ pluginSlug }"
 
 describe( `Block Directory Tests`, () => {
 	beforeEach( async () => {
-		jsError = false;
-
 		await createNewPost();
 		await removeAllBlocks();
+
+		jsError = false;
 	} );
 
 	afterAll( async () => {
@@ -124,6 +124,11 @@ describe( `Block Directory Tests`, () => {
 			runTest( () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
+
+			// check to see if it errored.
+			if ( jsError ) {
+				throw new Error( jsError );
+			}
 
 			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
