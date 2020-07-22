@@ -100,12 +100,6 @@ describe( `Block Directory Tests`, () => {
 			const addBtnSelector = '.block-directory-downloadable-blocks-list li:first-child button';
 			let addBtn = await page.waitForSelector( addBtnSelector );
 
-			const html = await page.$eval('.block-directory-downloadable-blocks-list', (element) => {
-				return element.innerHTML
-			});
-
-			console.log(html)
-
 			// Wait for the Block install and insert to complete.
 			await Promise.all( [
 
@@ -123,7 +117,13 @@ describe( `Block Directory Tests`, () => {
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
 
-			] );
+			] )
+
+			const html = await page.$eval('.block-directory-downloadable-blocks-list', (element) => {
+				return element.innerHTML
+			});
+
+			console.log(html)
 
 			const blocks = await getThirdPartyBlocks();
 
