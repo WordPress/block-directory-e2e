@@ -27,6 +27,6 @@ export const waitUntilNetworkIdle = async ( { waitUntil } ) => {
 	await sleep( 500 );
 
 	if ( inflight > maxIdle ) {
-		await wait( { waitUntil } );
+		await waitUntilNetworkIdle( { waitUntil } );
 	}
 }
