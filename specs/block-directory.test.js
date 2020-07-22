@@ -108,10 +108,10 @@ describe( `Block Directory Tests`, () => {
 
 				Promise.any( [
 					// Wait for the add button to disappear which signals the block was registered
-					page.waitForSelector( addBtnSelector, { hidden: true, timeout: 100000 } ),
+					page.waitForSelector( addBtnSelector, { hidden: true, timeout: 90000 } ),
 
 					// or, for the retry "crashed editor" reload button to appear instead.
-					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button', { timeout: 100000 } )
+					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button', { timeout: 90000 } )
 				]).catch( e => console.log( e )),
 
 				// And wait for the Network to go idle (Assets inserted)
