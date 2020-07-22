@@ -108,11 +108,11 @@ describe( `Block Directory Tests`, () => {
 
 				Promise.any( [
 					// Wait for the add button to disappear which signals the block was registered
-					page.waitForSelector( '.block-editor-block-types-list div:first-child button' ),
+					page.waitForSelector( addBtnSelector, { hidden: true } ),
 
 					// or, for the retry "crashed editor" reload button to appear instead.
 					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button' )
-				]),
+				]).catch( e => console.log( e )),
 
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
