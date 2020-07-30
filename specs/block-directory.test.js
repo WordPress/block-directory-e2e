@@ -65,11 +65,18 @@ describe( `Block Directory Tests`, () => {
 		await uninstallPlugin( pluginSlug );
 	} );
 
+	// Be patient.
+	page.setDefaultTimeout( 60000 );
+
 	let freshScripts = [];
 	let freshStyles  = [];
 
 	it( 'Block returns from API and installs', async ( done ) => {
 		try {
+			// Determine the loaded assets, store it for the next test.
+			freshScripts = await getAllLoadedScripts();
+			freshStyles  = await getAllLoadedStyles();
+
 			await searchForBlock( searchTerm );
 
 			const finalResponse = await page.waitForResponse(
@@ -80,10 +87,6 @@ describe( `Block Directory Tests`, () => {
 			);
 
 			const resp = await finalResponse.json();
-
-			// Determine the loaded assets, store it for the next test.
-			freshScripts = await getAllLoadedScripts();
-			freshStyles  = await getAllLoadedStyles();
 
 			runTest( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
@@ -110,7 +113,7 @@ describe( `Block Directory Tests`, () => {
 					page.waitForSelector( addBtnSelector, { hidden: true } ),
 
 					// or, for the retry "crashed editor" reload button to appear instead.
-					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error' )
+					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error' ),
 				]),
 
 				// And wait for the Network to go idle (Assets inserted)
