@@ -170,6 +170,7 @@ describe( `Block Directory Tests`, () => {
 
 		core.setOutput( 'scripts', scriptDiff );
 		core.setOutput( 'styles',  styleDiff  );
+		core.setOutput( 'blocks',  blocks );
 
 		done();
 	} );

@@ -12,9 +12,20 @@ export const getThirdPartyBlocks = async () => {
 
 		return blocks
 			.filter( ( i ) => ! i.name.startsWith( 'core' ) )
-			.map( ( i ) => i.title ); // We return a new object the block can have a react element which not serializable and would result in an undefined list
+			.map( ( i ) => {
+				// We return a new object the block can have a react element which not serializable and would result in an undefined list
+				return {
+					name: i.name,
+					title: i.title,
+					description: i.description,
+					category: i.category,
+					keywords: i.keywords,
+					supports: i.supports,
+				}
+			} );
 	} );
 };
+
 
 export const getInstalledBlocks = async () => {
 	return page.evaluate( () => {
