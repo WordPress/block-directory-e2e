@@ -16,6 +16,7 @@ jobs:
       error: ${{ steps.testRunDirectory.outputs.error }}
       scripts: ${{ steps.testRunDirectory.outputs.scripts }}
       styles: ${{ steps.testRunDirectory.outputs.styles }}
+      blocks: ${{ steps.testRunDirectory.outputs.blocks }}
       screenshotSearchResults: ${{ steps.testRunDirectory.outputs.screenshotSearchResults }}
       screenshotBlock: ${{ steps.testRunDirectory.outputs.screenshotBlock }}
     steps:
