@@ -98,12 +98,24 @@ describe( `Block Directory Tests`, () => {
 			}, `We found no matching blocks for "${ searchTerm }" in the directory.` );
 
 			const addBtnSelector = '.block-directory-downloadable-blocks-list li:first-child button';
-			let addBtn = await page.waitForSelector( addBtnSelector );
+			const addBtn = await page.waitForSelector( addBtnSelector );
 
-			// Add the block
-			await addBtn.click();
+			// Wait for the Block install and insert to complete.
+			await Promise.all( [
+				// Add the block
+				addBtn.click(),
 
-			await waitUntilNetworkIdle( 'networkidle0' );
+				Promise.any( [
+					// Wait for the add button to disappear which signals the block was registered
+					page.waitForSelector( addBtnSelector, { hidden: true } ),
+
+					// or, for the retry "crashed editor" reload button to appear instead.
+					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button' )
+				]),
+
+				// And wait for the Network to go idle (Assets inserted)
+				waitUntilNetworkIdle( 'networkidle0' ),
+			] );
 
 			const blocks = await getThirdPartyBlocks();
 
