@@ -145,7 +145,11 @@ describe( `Block Directory Tests`, () => {
 			}
 
 			// Get a screenshot of the block.
-			core.setOutput( 'screenshotBlock', await ( await page.waitForSelector( `div[data-type="${ blocks[0].name }"]` ) ).screenshot( { encoding: 'base64' } ) );
+			try {
+				core.setOutput( 'screenshotBlock', await ( await page.waitForSelector( '.is-root-container .wp-block:not([data-type^="core/"])' ) ).screenshot( { encoding: 'base64' } ) );
+			} catch ( e ) {
+				// Ignore any error here, the test should still succeed.
+			}
 
 			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
