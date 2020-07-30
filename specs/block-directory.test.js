@@ -103,6 +103,9 @@ describe( `Block Directory Tests`, () => {
 			const addBtnSelector = '.block-directory-downloadable-blocks-list li:first-child button';
 			await page.waitForSelector( addBtnSelector );
 
+			// Output a screenshot of the Search Results for debugging.
+			core.setOutput( 'screenshotSearchResults', await ( await page.$( '.block-directory-downloadable-blocks-list' ) ).screenshot( { encoding: 'base64' } ) );
+
 			// Wait for the Block install and insert to complete.
 			await Promise.all( [
 				// Add the block
@@ -140,6 +143,9 @@ describe( `Block Directory Tests`, () => {
 			if ( jsError ) {
 				throw new Error( jsError );
 			}
+
+			// Get a screenshot of the block.
+			core.setOutput( 'screenshotBlock', await ( await page.waitForSelector( `div[data-type="${ blocks[0].name }"]` ) ).screenshot( { encoding: 'base64' } ) );
 
 			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
