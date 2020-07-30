@@ -110,12 +110,22 @@ describe( `Block Directory Tests`, () => {
 					page.waitForSelector( addBtnSelector, { hidden: true } ),
 
 					// or, for the retry "crashed editor" reload button to appear instead.
-					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error button' )
+					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error' )
 				]),
 
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
 			] );
+
+			// Check to see if there was a specific reason for a failure.
+			runTest( async () => {
+				const error = await page.evaluate( () => {
+					const el = document.querySelector('.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content' );
+					return el ? el.innerText : false
+				} );
+
+				expect( error ).toBeFalsy();
+			}, `Couldn't install "${ searchTerm }".` );
 
 			const blocks = await getThirdPartyBlocks();
 
