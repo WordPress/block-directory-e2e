@@ -117,6 +117,9 @@ describe( `Block Directory Tests`, () => {
 
 					// or, for the retry "crashed editor" reload button to appear instead.
 					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error' ),
+
+					// or, a non-core block to be inserted into the Post.
+					page.waitForSelector( '.is-root-container .wp-block:not([data-type^="core/"])' ),
 				]),
 
 				// And wait for the Network to go idle (Assets inserted)
