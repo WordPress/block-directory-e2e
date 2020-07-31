@@ -19,6 +19,7 @@ jobs:
       blocks: ${{ steps.testRunDirectory.outputs.blocks }}
       screenshotSearchResults: ${{ steps.testRunDirectory.outputs.screenshotSearchResults }}
       screenshotBlock: ${{ steps.testRunDirectory.outputs.screenshotBlock }}
+      screenshotError: ${{ steps.testRunDirectory.outputs.screenshotError }}
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
