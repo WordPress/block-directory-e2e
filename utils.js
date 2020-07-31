@@ -39,11 +39,6 @@ export const runTest = ( func, errorMessage ) => {
 	try {
 		func();
 	} catch ( e ) {
-		try {
-			core.setOutput( 'screenshotError', await page.screenshot( { encoding: 'base64' } ) );
-		} catch ( f ) {
-			// Ignore any errors in capturing the screenshot, throw our real error
-		}
 		console.log( e );
 		throw new Error( errorMessage );
 	}
