@@ -7,7 +7,7 @@ export const removeAllBlocks = async () => {
 };
 
 export const getThirdPartyBlocks = async () => {
-	return page.evaluate( () => {
+	return await page.evaluate( () => {
 		const blocks = wp.data.select( 'core/blocks' ).getBlockTypes();
 
 		return blocks

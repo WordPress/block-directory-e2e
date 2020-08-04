@@ -118,25 +118,17 @@ describe( `Block Directory Tests`, () => {
 				 ).screenshot( { encoding: 'base64' } )
 			);
 
+			// Add the block
+			await page.click( addBtnSelector );
+
 			// Wait for the Block install and insert to complete.
 			await Promise.all( [
-				// Add the block
-				page.click( addBtnSelector ),
-
-				Promise.any( [
-					// Wait for the add button to disappear which signals the block was registered
-					page.waitForSelector( addBtnSelector, { hidden: true } ),
-
-					// or, for the retry "crashed editor" reload button to appear instead.
-					page.waitForSelector(
-						'.block-directory-downloadable-block-notice.is-error'
-					),
-
-					// or, a non-core block to be inserted into the Post.
-					page.waitForSelector(
-						'.is-root-container .wp-block:not([data-type^="core/"])'
-					),
-				] ),
+				// Watch the button go busy, then un-busy.
+				// @todo In reality, this should be removed, but it's not, for some reason.
+				// Partially related to https://github.com/WordPress/gutenberg/pull/24148
+				// but also a problem with non-child blocks.
+				await page.waitForSelector( addBtnSelector + '.is-busy' ),
+				await page.waitForSelector( addBtnSelector + ':not(.is-busy)' ),
 
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
