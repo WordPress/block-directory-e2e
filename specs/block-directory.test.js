@@ -206,10 +206,10 @@ describe( `Block Directory Tests`, () => {
 		const loadedStyles = await getAllLoadedStyles();
 
 		const scriptDiff = loadedScripts.filter(
-			( x ) => ! freshScripts.some( ( y ) => x.id == y.id )
+			( x ) => ! freshScripts.some( ( y ) => x.id === y.id )
 		);
 		const styleDiff = loadedStyles.filter(
-			( x ) => ! freshStyles.some( ( y ) => x.id == y.id )
+			( x ) => ! freshStyles.some( ( y ) => x.id === y.id )
 		);
 
 		core.setOutput( 'scripts', scriptDiff );

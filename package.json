@@ -19,5 +19,12 @@
   "devDependencies": {
     "@wordpress/e2e-test-utils": "^4.11.1",
     "@wordpress/scripts": "^12.1.1"
+  },
+  "eslintConfig": {
+    "extends": "plugin:@wordpress/eslint-plugin/recommended",
+    "root": true,
+    "rules": {
+      "no-console": "off"
+    }
   }
 }

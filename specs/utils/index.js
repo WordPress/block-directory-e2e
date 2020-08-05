@@ -45,7 +45,7 @@ export const runTest = ( func, errorMessage ) => {
 
 export const getAllLoadedScripts = async () => {
 	return await page.evaluate( () => {
-		let assets = [];
+		const assets = [];
 		document.querySelectorAll( 'script' ).forEach( ( item ) => {
 			if ( item.src ) {
 				assets.push( {
@@ -66,7 +66,7 @@ export const getAllLoadedScripts = async () => {
 
 export const getAllLoadedStyles = async () => {
 	return await page.evaluate( () => {
-		let assets = [];
+		const assets = [];
 		document
 			.querySelectorAll( 'link[rel="stylesheet"]' )
 			.forEach( ( item ) => {

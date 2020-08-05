@@ -7,11 +7,11 @@ page.on( 'request', ( request ) => {
 	request.continue();
 } );
 
-page.on( 'requestfinished', ( request ) => {
+page.on( 'requestfinished', () => {
 	inflight--;
 } );
 
-page.on( 'requestfailed', ( request ) => {
+page.on( 'requestfailed', () => {
 	inflight--;
 } );
 
