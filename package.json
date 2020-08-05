@@ -6,6 +6,8 @@
   "scripts": {
     "test:e2e:interactive": "npm run test:e2e -- --puppeteer-interactive ",
     "test:e2e": "wp-scripts test-e2e --detectOpenHandles",
+    "lint": "wp-scripts lint-js specs/*",
+    "format": "wp-scripts format-js specs/*",
     "wp-env": "wp-env"
   },
   "author": "WordPress.org",
