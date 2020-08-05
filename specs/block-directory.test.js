@@ -98,12 +98,8 @@ describe( `Block Directory Tests`, () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
 			}, `The search result for "${ searchTerm }" isn't an array.` );
 
-			runTest( () => {
-				expect( resp.length ).toBeLessThan( 2 );
-			}, `We found multiple blocks for "${ searchTerm }".` );
-
 			expectWithMessage( () => {
-				expect( resp ).toHaveLength( 1 );
+				expect( resp.length ).toBeGreaterThan( 0 );
 			}, `We found no matching blocks for "${ searchTerm }" in the directory.` );
 
 			const addBtnSelector =
