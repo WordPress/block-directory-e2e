@@ -21,11 +21,10 @@ export const getThirdPartyBlocks = async () => {
 					category: i.category,
 					keywords: i.keywords,
 					supports: i.supports,
-				}
+				};
 			} );
 	} );
 };
-
 
 export const getInstalledBlocks = async () => {
 	return page.evaluate( () => {
@@ -44,15 +43,18 @@ export const runTest = ( func, errorMessage ) => {
 	}
 };
 
-export const getAllLoadedScripts = async() => {
+export const getAllLoadedScripts = async () => {
 	return await page.evaluate( () => {
 		let assets = [];
-		document.querySelectorAll('script').forEach( ( item ) => {
+		document.querySelectorAll( 'script' ).forEach( ( item ) => {
 			if ( item.src ) {
 				assets.push( {
-					'id': item.id.replace( /-js$/, '' ),
-					'src': item.src
-						.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' )
+					id: item.id.replace( /-js$/, '' ),
+					src: item.src
+						.replace(
+							/^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/,
+							''
+						)
 						.replace( /[?&]ver=[a-z0-9.-]+/, '' ),
 				} );
 			}
@@ -62,19 +64,24 @@ export const getAllLoadedScripts = async() => {
 	} );
 };
 
-export const getAllLoadedStyles = async() => {
+export const getAllLoadedStyles = async () => {
 	return await page.evaluate( () => {
 		let assets = [];
-		document.querySelectorAll('link[rel="stylesheet"]').forEach( ( item ) => {
-			if ( item.href ) {
-				assets.push( {
-					'id': item.id.replace( /-css$/, '' ),
-					'src': item.href
-						.replace( /^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/, '' )
-						.replace( /[?&]ver=[a-z0-9.-]+/, '' ),
-				} );
-			}
-		} );
+		document
+			.querySelectorAll( 'link[rel="stylesheet"]' )
+			.forEach( ( item ) => {
+				if ( item.href ) {
+					assets.push( {
+						id: item.id.replace( /-css$/, '' ),
+						src: item.href
+							.replace(
+								/^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)?/,
+								''
+							)
+							.replace( /[?&]ver=[a-z0-9.-]+/, '' ),
+					} );
+				}
+			} );
 
 		return assets;
 	} );

@@ -2,23 +2,24 @@ let inflight = 0;
 
 page.setRequestInterception( true );
 
-page.on( 'request', request => {
+page.on( 'request', ( request ) => {
 	inflight++;
 	request.continue();
 } );
 
-page.on( 'requestfinished', request => {
+page.on( 'requestfinished', ( request ) => {
 	inflight--;
 } );
 
-page.on( 'requestfailed', request => {
+page.on( 'requestfailed', ( request ) => {
 	inflight--;
 } );
 
-const sleep = (timeout) => new Promise( resolve => setTimeout( resolve, timeout ) );
+const sleep = ( timeout ) =>
+	new Promise( ( resolve ) => setTimeout( resolve, timeout ) );
 
 export const waitUntilNetworkIdle = async ( { waitUntil } ) => {
-	const maxIdle = waitUntil === 'networkidle0' ? 0 : 2
+	const maxIdle = waitUntil === 'networkidle0' ? 0 : 2;
 
 	while ( inflight > maxIdle ) {
 		await sleep( 100 );
@@ -29,4 +30,4 @@ export const waitUntilNetworkIdle = async ( { waitUntil } ) => {
 	if ( inflight > maxIdle ) {
 		await waitUntilNetworkIdle( { waitUntil } );
 	}
-}
+};

@@ -4,7 +4,7 @@
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
 
-const promiseAny = require('promise.any');
+const promiseAny = require( 'promise.any' );
 promiseAny.shim();
 
 /**
@@ -21,7 +21,13 @@ import {
  * Internal dependencies
  */
 
-import { getThirdPartyBlocks, runTest, removeAllBlocks, getAllLoadedScripts, getAllLoadedStyles } from '../utils';
+import {
+	getThirdPartyBlocks,
+	runTest,
+	removeAllBlocks,
+	getAllLoadedScripts,
+	getAllLoadedStyles,
+} from '../utils';
 import { waitUntilNetworkIdle } from '../networkIdle';
 
 // We don't want to see warnings during these tests
@@ -40,7 +46,7 @@ const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
 
 // Variable to hold any encounted JS errors.
 let jsError = false;
-page.on( 'pageerror', error => {
+page.on( 'pageerror', ( error ) => {
 	jsError = error.toString();
 
 	console.log( error );
@@ -69,13 +75,13 @@ describe( `Block Directory Tests`, () => {
 	page.setDefaultTimeout( 60000 );
 
 	let freshScripts = [];
-	let freshStyles  = [];
+	let freshStyles = [];
 
 	it( 'Block returns from API and installs', async ( done ) => {
 		try {
 			// Determine the loaded assets, store it for the next test.
 			freshScripts = await getAllLoadedScripts();
-			freshStyles  = await getAllLoadedStyles();
+			freshStyles = await getAllLoadedStyles();
 
 			await searchForBlock( searchTerm );
 
@@ -100,11 +106,17 @@ describe( `Block Directory Tests`, () => {
 				expect( resp ).toHaveLength( 1 );
 			}, `We found no matching blocks for "${ searchTerm }" in the directory.` );
 
-			const addBtnSelector = '.block-directory-downloadable-blocks-list li:first-child button';
+			const addBtnSelector =
+				'.block-directory-downloadable-blocks-list li:first-child button';
 			await page.waitForSelector( addBtnSelector );
 
 			// Output a screenshot of the Search Results for debugging.
-			core.setOutput( 'screenshotSearchResults', await ( await page.$( '.block-directory-downloadable-blocks-list' ) ).screenshot( { encoding: 'base64' } ) );
+			core.setOutput(
+				'screenshotSearchResults',
+				await (
+					await page.$( '.block-directory-downloadable-blocks-list' )
+				 ).screenshot( { encoding: 'base64' } )
+			);
 
 			// Wait for the Block install and insert to complete.
 			await Promise.all( [
@@ -116,11 +128,15 @@ describe( `Block Directory Tests`, () => {
 					page.waitForSelector( addBtnSelector, { hidden: true } ),
 
 					// or, for the retry "crashed editor" reload button to appear instead.
-					page.waitForSelector( '.block-directory-downloadable-block-notice.is-error' ),
+					page.waitForSelector(
+						'.block-directory-downloadable-block-notice.is-error'
+					),
 
 					// or, a non-core block to be inserted into the Post.
-					page.waitForSelector( '.is-root-container .wp-block:not([data-type^="core/"])' ),
-				]),
+					page.waitForSelector(
+						'.is-root-container .wp-block:not([data-type^="core/"])'
+					),
+				] ),
 
 				// And wait for the Network to go idle (Assets inserted)
 				waitUntilNetworkIdle( 'networkidle0' ),
@@ -129,8 +145,10 @@ describe( `Block Directory Tests`, () => {
 			// Check to see if there was a specific reason for a failure.
 			runTest( async () => {
 				const error = await page.evaluate( () => {
-					const el = document.querySelector('.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content' );
-					return el ? el.innerText : false
+					const el = document.querySelector(
+						'.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content'
+					);
+					return el ? el.innerText : false;
 				} );
 
 				expect( error ).toBeFalsy();
@@ -149,7 +167,14 @@ describe( `Block Directory Tests`, () => {
 
 			// Get a screenshot of the block.
 			try {
-				core.setOutput( 'screenshotBlock', await ( await page.waitForSelector( '.is-root-container .wp-block:not([data-type^="core/"])' ) ).screenshot( { encoding: 'base64' } ) );
+				core.setOutput(
+					'screenshotBlock',
+					await (
+						await page.waitForSelector(
+							'.is-root-container .wp-block:not([data-type^="core/"])'
+						)
+					 ).screenshot( { encoding: 'base64' } )
+				);
 			} catch ( e ) {
 				// Ignore any error here, the test should still succeed.
 			}
@@ -170,7 +195,7 @@ describe( `Block Directory Tests`, () => {
 		// Page reloaded from previous test.
 		runTest( () => {
 			expect( freshScripts.length ).toBeGreaterThan( 0 );
-			expect( freshStyles.length  ).toBeGreaterThan( 0 );
+			expect( freshStyles.length ).toBeGreaterThan( 0 );
 		}, `The previous test did not load scripts/styles.` );
 
 		const blocks = await getThirdPartyBlocks();
@@ -179,14 +204,18 @@ describe( `Block Directory Tests`, () => {
 		}, `Block not installed.` );
 
 		const loadedScripts = await getAllLoadedScripts();
-		const loadedStyles  = await getAllLoadedStyles();
+		const loadedStyles = await getAllLoadedStyles();
 
-		const scriptDiff = loadedScripts.filter( x => !freshScripts.some( y => ( x.id == y.id ) ) );
-		const styleDiff  = loadedStyles.filter(  x => !freshStyles.some(  y => ( x.id == y.id ) ) );
+		const scriptDiff = loadedScripts.filter(
+			( x ) => ! freshScripts.some( ( y ) => x.id == y.id )
+		);
+		const styleDiff = loadedStyles.filter(
+			( x ) => ! freshStyles.some( ( y ) => x.id == y.id )
+		);
 
 		core.setOutput( 'scripts', scriptDiff );
-		core.setOutput( 'styles',  styleDiff  );
-		core.setOutput( 'blocks',  blocks );
+		core.setOutput( 'styles', styleDiff );
+		core.setOutput( 'blocks', blocks );
 
 		done();
 	} );
