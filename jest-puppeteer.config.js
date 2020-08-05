@@ -1,3 +1,6 @@
 module.exports = {
-	"exitOnPageError": false
+	"exitOnPageError": false,
+	launch: {
+		headless: process.env.PUPPETEER_HEADLESS !== 'false',
+  },
 }
