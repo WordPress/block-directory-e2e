@@ -23,7 +23,7 @@ import {
 
 import {
 	getThirdPartyBlocks,
-	runTest,
+	expectWithMessage,
 	removeAllBlocks,
 	getAllLoadedScripts,
 	getAllLoadedStyles,
@@ -94,7 +94,7 @@ describe( `Block Directory Tests`, () => {
 
 			const resp = await finalResponse.json();
 
-			runTest( () => {
+			expectWithMessage( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
 			}, `The search result for "${ searchTerm }" isn't an array.` );
 
@@ -102,7 +102,7 @@ describe( `Block Directory Tests`, () => {
 				expect( resp.length ).toBeLessThan( 2 );
 			}, `We found multiple blocks for "${ searchTerm }".` );
 
-			runTest( () => {
+			expectWithMessage( () => {
 				expect( resp ).toHaveLength( 1 );
 			}, `We found no matching blocks for "${ searchTerm }" in the directory.` );
 
@@ -142,7 +142,7 @@ describe( `Block Directory Tests`, () => {
 			await waitUntilNetworkIdle( 'networkidle0' );
 
 			// Check to see if there was a specific reason for a failure.
-			runTest( async () => {
+			expectWithMessage( async () => {
 				const error = await page.evaluate( () => {
 					const el = document.querySelector(
 						'.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content'
@@ -155,7 +155,7 @@ describe( `Block Directory Tests`, () => {
 
 			const blocks = await getThirdPartyBlocks();
 
-			runTest( () => {
+			expectWithMessage( () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ searchTerm }".` );
 
@@ -191,13 +191,13 @@ describe( `Block Directory Tests`, () => {
 
 	it( 'Block Installed - Extract Scripts & Styles required', async () => {
 		// Page reloaded from previous test.
-		runTest( () => {
+		expectWithMessage( () => {
 			expect( freshScripts.length ).toBeGreaterThan( 0 );
 			expect( freshStyles.length ).toBeGreaterThan( 0 );
 		}, `The previous test did not load scripts/styles.` );
 
 		const blocks = await getThirdPartyBlocks();
-		runTest( () => {
+		expectWithMessage( () => {
 			expect( blocks.length ).toBeGreaterThan( 0 );
 		}, `Block not installed.` );
 

@@ -34,7 +34,14 @@ export const getInstalledBlocks = async () => {
 	} );
 };
 
-export const runTest = ( func, errorMessage ) => {
+/**
+ * Run a function (usually a call to `expect()…`). If it fails, throw an error.
+ * This lets us better describe where a test fails, since we can't nest tests.
+ *
+ * @param {Function} func
+ * @param {string} errorMessage
+ */
+export const expectWithMessage = ( func, errorMessage ) => {
 	try {
 		func();
 	} catch ( e ) {
