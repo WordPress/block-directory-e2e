@@ -121,18 +121,25 @@ describe( `Block Directory Tests`, () => {
 			// Add the block
 			await page.click( addBtnSelector );
 
-			// Wait for the Block install and insert to complete.
-			await Promise.all( [
-				// Watch the button go busy, then un-busy.
-				// @todo In reality, this should be removed, but it's not, for some reason.
-				// Partially related to https://github.com/WordPress/gutenberg/pull/24148
-				// but also a problem with non-child blocks.
-				await page.waitForSelector( addBtnSelector + '.is-busy' ),
-				await page.waitForSelector( addBtnSelector + ':not(.is-busy)' ),
+			// Watch the button go busy…
+			await page.waitForSelector( addBtnSelector + '.is-busy' );
 
-				// And wait for the Network to go idle (Assets inserted)
-				waitUntilNetworkIdle( 'networkidle0' ),
+			// Then either non-busy or removed.
+			await Promise.any( [
+				// This is the expected case, the button is removed from the screen
+				// because the block is installed.
+				page.waitFor(
+					() => ! document.querySelector( addBtnSelector )
+				),
+				// But in some cases the inserted block has a restricted set of "children",
+				// which interacts with the filter & Block Directory, so the add button
+				// doesn't go away, it just becomes "un-busy".
+				// See https://github.com/WordPress/gutenberg/pull/24148
+				page.waitForSelector( addBtnSelector + ':not(.is-busy)' ),
 			] );
+
+			// And wait for the Network to go idle (Assets inserted)
+			await waitUntilNetworkIdle( 'networkidle0' );
 
 			// Check to see if there was a specific reason for a failure.
 			runTest( async () => {
