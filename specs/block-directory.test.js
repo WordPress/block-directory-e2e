@@ -122,11 +122,8 @@ describe( `Block Directory Tests`, () => {
 
 			// Then either non-busy or removed.
 			await Promise.any( [
-				// This is the expected case, the button is removed from the screen
-				// because the block is installed.
-				page.waitFor(
-					() => ! document.querySelector( addBtnSelector )
-				),
+				// This is the expected case, the inserter switched back to block-types-list.
+				page.waitForSelector( 'button.block-editor-block-types-list__item' ),
 				// But in some cases the inserted block has a restricted set of "children",
 				// which interacts with the filter & Block Directory, so the add button
 				// doesn't go away, it just becomes "un-busy".
