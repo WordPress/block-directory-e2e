@@ -5,6 +5,6 @@ module.exports = {
 		'<rootDir>/config/setup-test-framework.js',
 	],
 	testPathIgnorePatterns: [
-		'/node_modules/',
+		'/node_modules/', '/specs/utils/'
 	],
 };
