@@ -77,7 +77,7 @@ describe( `Block Directory Tests`, () => {
 	let freshScripts = [];
 	let freshStyles = [];
 
-	it( 'Block returns from API and installs', async ( done ) => {
+	it( 'Block returns from API and installs', async () => {
 		try {
 			// Determine the loaded assets, store it for the next test.
 			freshScripts = await getAllLoadedScripts();
@@ -181,7 +181,6 @@ describe( `Block Directory Tests`, () => {
 
 			core.setOutput( 'error', '' );
 			core.setOutput( 'success', true );
-			done();
 		} catch ( e ) {
 			core.setFailed( e.message );
 			core.setOutput( 'error', jsError || e.message );
@@ -191,7 +190,7 @@ describe( `Block Directory Tests`, () => {
 		}
 	} );
 
-	it( 'Block Installed - Extract Scripts & Styles required', async ( done ) => {
+	it( 'Block Installed - Extract Scripts & Styles required', async () => {
 		// Page reloaded from previous test.
 		runTest( () => {
 			expect( freshScripts.length ).toBeGreaterThan( 0 );
@@ -216,7 +215,5 @@ describe( `Block Directory Tests`, () => {
 		core.setOutput( 'scripts', scriptDiff );
 		core.setOutput( 'styles', styleDiff );
 		core.setOutput( 'blocks', blocks );
-
-		done();
 	} );
 } );
