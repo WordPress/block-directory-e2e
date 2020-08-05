@@ -27,8 +27,8 @@ import {
 	removeAllBlocks,
 	getAllLoadedScripts,
 	getAllLoadedStyles,
-} from '../utils';
-import { waitUntilNetworkIdle } from '../networkIdle';
+} from './utils';
+import { waitUntilNetworkIdle } from './utils/network-idle';
 
 // We don't want to see warnings during these tests
 console.warn = () => {};
