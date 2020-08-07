@@ -110,7 +110,7 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput(
 				'screenshotSearchResults',
 				await (
-					await page.$( '.block-directory-downloadable-blocks-list' )
+					await page.$( '.block-directory-downloadable-blocks-list li:first-child' )
 				 ).screenshot( { encoding: 'base64' } )
 			);
 
