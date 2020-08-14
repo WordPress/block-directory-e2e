@@ -40,9 +40,9 @@ const urlMatch = ( url ) => {
 	return url.indexOf( urlPart ) >= 0 || url.indexOf( encoded ) >= 0;
 };
 
-const payload = github.context.payload.client_payload;
-const searchTerm = process.env.SEARCH_TERM || payload.searchTerm;
+const payload = github.context.payload.client_payload || {};
 const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
+const searchTerm = process.env.SEARCH_TERM || payload.searchTerm || "slug:" + pluginSlug;
 
 // Variable to hold any encounted JS errors.
 let jsError = false;
