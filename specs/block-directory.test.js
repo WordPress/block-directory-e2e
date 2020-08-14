@@ -42,7 +42,7 @@ const urlMatch = ( url ) => {
 
 const payload = github.context.payload.client_payload || {};
 const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
-const searchTerm = process.env.SEARCH_TERM || payload.searchTerm || "slug:" + pluginSlug;
+const searchTerm = process.env.SEARCH_TERM || payload.searchTerm || `slug:${ pluginSlug }`;
 
 // Variable to hold any encounted JS errors.
 let jsError = false;

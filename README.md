@@ -21,15 +21,15 @@ This project will run E2E tests to make sure a block is passing basic Gutenberg 
 
 	npm run test:e2e
 	
-For interactive tests (not working right now?)
+For interactive tests
 
-	npm run test:e2e -- --puppeteer-interactive
+	npm run test:e2e:interactive
 
 ## To trigger the actions on GitHub
 
 1. Generate a personal token in Settings > Developer Settings > Personal Access Tokens
 2. Use the token to trigger a github action via API (replace the `{account}/{repo}` with your fork):
 
-	curl -H "Authorization: token $GITHUB_PERSONAL_TOKEN" -H 'Accept: application/vnd.github.everest-preview+json' "https://api.github.com/repos/{account}/{repo}/dispatches" -d '{"event_type": "Test Block", "client_payload": {"slug": "plugin-slug", "searchTerm": "Unique Search Term"}}'
+	curl -H "Authorization: token $GITHUB_PERSONAL_TOKEN" -H 'Accept: application/vnd.github.everest-preview+json' "https://api.github.com/repos/{account}/{repo}/dispatches" -d '{"event_type": "Test Block", "client_payload": {"slug": "plugin-slug" }}'
 
 3. The action will appear in the "Actions" section of your repo.
