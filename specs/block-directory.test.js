@@ -15,6 +15,7 @@ import {
 	searchForBlock,
 	deactivatePlugin,
 	uninstallPlugin,
+	getEditedPostContent,
 } from '@wordpress/e2e-test-utils';
 
 /**
@@ -160,6 +161,17 @@ describe( `Block Directory Tests`, () => {
 			// check to see if it errored.
 			if ( jsError ) {
 				throw new Error( jsError );
+			}
+
+			try {
+				// wait for the element to exist in the editor
+				await page.waitForSelector(
+					`div[data-type="${ blocks[ 0 ].name }"]`
+				);
+			} catch ( ex ) {
+				throw new Error(
+					'Block not added to the document after install'
+				);
 			}
 
 			// Get a screenshot of the block.
