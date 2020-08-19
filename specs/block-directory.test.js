@@ -42,7 +42,8 @@ const urlMatch = ( url ) => {
 
 const payload = github.context.payload.client_payload || {};
 const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
-const searchTerm = process.env.SEARCH_TERM || payload.searchTerm || `slug:${ pluginSlug }`;
+const searchTerm =
+	process.env.SEARCH_TERM || payload.searchTerm || `slug:${ pluginSlug }`;
 
 // Variable to hold any encounted JS errors.
 let jsError = false;
@@ -110,7 +111,9 @@ describe( `Block Directory Tests`, () => {
 			core.setOutput(
 				'screenshotSearchResults',
 				await (
-					await page.$( '.block-directory-downloadable-blocks-list li:first-child' )
+					await page.$(
+						'.block-directory-downloadable-blocks-list li:first-child'
+					)
 				 ).screenshot( { encoding: 'base64' } )
 			);
 
@@ -123,7 +126,9 @@ describe( `Block Directory Tests`, () => {
 			// Then either non-busy or removed.
 			await Promise.any( [
 				// This is the expected case, the inserter switched back to block-types-list.
-				page.waitForSelector( 'button.block-editor-block-types-list__item' ),
+				page.waitForSelector(
+					'button.block-editor-block-types-list__item'
+				),
 				// But in some cases the inserted block has a restricted set of "children",
 				// which interacts with the filter & Block Directory, so the add button
 				// doesn't go away, it just becomes "un-busy".
@@ -135,16 +140,16 @@ describe( `Block Directory Tests`, () => {
 			await waitUntilNetworkIdle( 'networkidle0' );
 
 			// Check to see if there was a specific reason for a failure.
-			expectWithMessage( async () => {
-				const error = await page.evaluate( () => {
-					const el = document.querySelector(
-						'.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content'
-					);
-					return el ? el.innerText : false;
-				} );
+			const error = await page.evaluate( () => {
+				const el = document.querySelector(
+					'.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content'
+				);
+				return el ? el.innerText : false;
+			} );
 
+			expectWithMessage( () => {
 				expect( error ).toBeFalsy();
-			}, `Couldn't install "${ searchTerm }".` );
+			}, `Couldn't install "${ searchTerm }"; received error message.` );
 
 			const blocks = await getThirdPartyBlocks();
 
