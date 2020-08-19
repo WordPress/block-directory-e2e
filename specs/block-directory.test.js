@@ -149,7 +149,7 @@ describe( `Block Directory Tests`, () => {
 
 			expectWithMessage( () => {
 				expect( error ).toBeFalsy();
-			}, `Couldn't install "${ searchTerm }"; received error message.` );
+			}, `Couldn't install "${ searchTerm }"; '${ error }'` );
 
 			const blocks = await getThirdPartyBlocks();
 
