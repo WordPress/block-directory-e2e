@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+const fs = require('fs').promises;
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
 
@@ -109,13 +110,15 @@ describe( `Block Directory Tests`, () => {
 			await page.waitForSelector( addBtnSelector );
 
 			// Output a screenshot of the Search Results for debugging.
+			await (
+				await page.$(
+					'.block-directory-downloadable-blocks-list li:first-child'
+				)
+			 ).screenshot( { path: 'screenshots/searchResults.png' } )
+
 			core.setOutput(
 				'screenshotSearchResults',
-				await (
-					await page.$(
-						'.block-directory-downloadable-blocks-list li:first-child'
-					)
-				 ).screenshot( { encoding: 'base64' } )
+				await fs.readFile( 'screenshots/searchResults.png', { encoding: 'base64' } )
 			);
 
 			// Add the block
@@ -176,13 +179,15 @@ describe( `Block Directory Tests`, () => {
 
 			// Get a screenshot of the block.
 			try {
+				await (
+					await page.waitForSelector(
+						'.is-root-container .wp-block:not([data-type^="core/"])'
+					)
+				 ).screenshot( { path: 'screenshots/block.png' } );
+
 				core.setOutput(
 					'screenshotBlock',
-					await (
-						await page.waitForSelector(
-							'.is-root-container .wp-block:not([data-type^="core/"])'
-						)
-					 ).screenshot( { encoding: 'base64' } )
+					await fs.readFile( 'screenshots/block.png', { encoding: 'base64' } )
 				);
 			} catch ( e ) {
 				// Ignore any error here, the test should still succeed.
