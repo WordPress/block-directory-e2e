@@ -38,6 +38,7 @@ jobs:
       run: npm run test:e2e
     - name: Upload screenshots to GitHub
       uses: actions/upload-artifact@v2
+      if: ${{ always() }}
       with:
         name: Screenshots
         path: screenshots/
