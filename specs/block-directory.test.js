@@ -55,6 +55,22 @@ page.on( 'pageerror', ( error ) => {
 	console.log( error );
 } );
 
+// Track the last 404 response
+let lastFourOhFour = false;
+page.on('response', ( response ) => {
+	const url = response.url()
+		.replace(
+			/^http:\/\/[^/]+\/(wp-content\/plugins\/[^/]+\/)/,
+			''
+		)
+		.replace( /[?&]ver=[a-z0-9.-]+/, '' );
+
+	if ( 404 === response.status() ) {
+		lastFourOhFour = url;
+	}
+} );
+
+
 core.info( `
 --------------------------------------------------------------
 Running Tests for "${ searchTerm }/${ pluginSlug }"
@@ -144,12 +160,17 @@ describe( `Block Directory Tests`, () => {
 			await waitUntilNetworkIdle( 'networkidle0' );
 
 			// Check to see if there was a specific reason for a failure.
-			const error = await page.evaluate( () => {
+			let error = await page.evaluate( () => {
 				const el = document.querySelector(
 					'.block-directory-downloadable-block-notice.is-error .block-directory-downloadable-block-notice__content'
 				);
 				return el ? el.innerText : false;
 			} );
+
+			if ( error && 'Error loading asset.' === error && lastFourOhFour ) {
+				// Alter the error slightly.
+				error = `Error loading asset "${ lastFourOhFour }"`;
+			}
 
 			expectWithMessage( () => {
 				expect( error ).toBeFalsy();
