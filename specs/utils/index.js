@@ -41,15 +41,17 @@ export const getInstalledBlocks = async () => {
  * @param {Function} func
  * @param {string} errorMessage
  */
-export const expectWithMessage = async ( func, errorMessage ) => {
+export const expectWithMessage = async ( func, errorMessage, captureErrorScreenshot = true ) => {
+
 	try {
 		await func();
 	} catch ( e ) {
-
-		// Capture a screenshot of the error and store it on GitHub.
-		try {
-			await page.screenshot( { path: 'screenshots/error.png' } );
-		} catch ( f ) {}
+		if ( captureErrorScreenshot ) {
+			// Capture a screenshot of the error and store it on GitHub.
+			try {
+				await page.screenshot( { path: 'screenshots/error.png', fullPage: true } );
+			} catch( f ) {}
+		}
 
 		console.log( e );
 		throw new Error( errorMessage );
