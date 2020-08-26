@@ -80,6 +80,11 @@ Running Tests for "${ pluginSlug }"
 --------------------------------------------------------------
 ` );
 
+// Send the URL to this actions run
+if ( process.env.GITHUB_RUN_ID ) {
+	core.setOutput( 'lastRunURL', `https://github.com/${ process.env.GITHUB_REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID }` );
+}
+
 describe( `Block Directory Tests`, () => {
 	beforeEach( async () => {
 		await createNewPost();
