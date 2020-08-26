@@ -17,6 +17,7 @@
     "@actions/github": "^4.0.0",
     "@wordpress/env": "^1.6.0",
     "jest": "^26.2.2",
+    "node-fetch": "^2.6.0",
     "promise.any": "^2.0.1",
     "puppeteer": "^5.2.1"
   },

@@ -1,8 +1,8 @@
 /**
  * External dependencies
  */
-const fs = require('fs').promises;
-const core = require( '@actions/core' );
+const fs     = require('fs').promises;
+const core   = require( '@actions/core' );
 const github = require( '@actions/github' );
 
 const promiseAny = require( 'promise.any' );
@@ -31,6 +31,11 @@ import {
 	getAllLoadedStyles,
 } from './utils';
 import { waitUntilNetworkIdle } from './utils/network-idle';
+
+// Filter browser requests.
+// - Ensure that wp-content/*.(css|js) always 404's instead of matching WordPress.
+// - favicons are not needed.
+require( './utils/filter-requests' );
 
 // We don't want to see warnings during these tests
 console.warn = () => {};
@@ -68,7 +73,6 @@ page.on('response', ( response ) => {
 		lastFourOhFour = url;
 	}
 } );
-
 
 core.info( `
 --------------------------------------------------------------
