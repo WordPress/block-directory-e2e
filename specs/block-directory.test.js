@@ -121,11 +121,11 @@ describe( `Block Directory Tests`, () => {
 
 			const resp = await finalResponse.json();
 
-			expectWithMessage( () => {
+			await expectWithMessage( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
 			}, `The search result for "${ pluginSlug }" isn't an array.` );
 
-			expectWithMessage( () => {
+			await expectWithMessage( () => {
 				expect( resp.length ).toBeGreaterThan( 0 );
 			}, `We found no matching blocks for "${ pluginSlug }" in the directory.` );
 
@@ -180,13 +180,13 @@ describe( `Block Directory Tests`, () => {
 				error = `Error loading asset "${ lastFourOhFour }"`;
 			}
 
-			expectWithMessage( () => {
+			await expectWithMessage( () => {
 				expect( error ).toBeFalsy();
 			}, `Couldn't install "${ pluginSlug }"; '${ error }'` );
 
 			const blocks = await getThirdPartyBlocks();
 
-			expectWithMessage( () => {
+			await expectWithMessage( () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
 			}, `Couldn't install "${ pluginSlug }". No registered blocks detected.` );
 
@@ -235,15 +235,15 @@ describe( `Block Directory Tests`, () => {
 
 	it( 'Block Installed - Extract Scripts & Styles required', async () => {
 		// Page reloaded from previous test.
-		expectWithMessage( () => {
+		await expectWithMessage( () => {
 			expect( freshScripts.length ).toBeGreaterThan( 0 );
 			expect( freshStyles.length ).toBeGreaterThan( 0 );
-		}, `The previous test did not load scripts/styles.` );
+		}, `The previous test did not load scripts/styles.`, false );
 
 		const blocks = await getThirdPartyBlocks();
-		expectWithMessage( () => {
+		await expectWithMessage( () => {
 			expect( blocks.length ).toBeGreaterThan( 0 );
-		}, `Block not installed.` );
+		}, `Block not installed.`, false );
 
 		const loadedScripts = await getAllLoadedScripts();
 		const loadedStyles = await getAllLoadedStyles();
