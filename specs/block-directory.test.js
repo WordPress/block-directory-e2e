@@ -44,8 +44,7 @@ const urlMatch = ( url ) => {
 
 const payload = github.context.payload.client_payload || {};
 const pluginSlug = process.env.PLUGIN_SLUG || payload.slug;
-const searchTerm =
-	process.env.SEARCH_TERM || payload.searchTerm || `slug:${ pluginSlug }`;
+const searchTerm = `slug:${ pluginSlug }`;
 
 // Variable to hold any encounted JS errors.
 let jsError = false;
@@ -73,7 +72,7 @@ page.on('response', ( response ) => {
 
 core.info( `
 --------------------------------------------------------------
-Running Tests for "${ searchTerm }/${ pluginSlug }"
+Running Tests for "${ pluginSlug }"
 --------------------------------------------------------------
 ` );
 
@@ -115,11 +114,11 @@ describe( `Block Directory Tests`, () => {
 
 			expectWithMessage( () => {
 				expect( Array.isArray( resp ) ).toBeTruthy();
-			}, `The search result for "${ searchTerm }" isn't an array.` );
+			}, `The search result for "${ pluginSlug }" isn't an array.` );
 
 			expectWithMessage( () => {
 				expect( resp.length ).toBeGreaterThan( 0 );
-			}, `We found no matching blocks for "${ searchTerm }" in the directory.` );
+			}, `We found no matching blocks for "${ pluginSlug }" in the directory.` );
 
 			const addBtnSelector =
 				'.block-directory-downloadable-blocks-list li:first-child button';
@@ -174,13 +173,13 @@ describe( `Block Directory Tests`, () => {
 
 			expectWithMessage( () => {
 				expect( error ).toBeFalsy();
-			}, `Couldn't install "${ searchTerm }"; '${ error }'` );
+			}, `Couldn't install "${ pluginSlug }"; '${ error }'` );
 
 			const blocks = await getThirdPartyBlocks();
 
 			expectWithMessage( () => {
 				expect( blocks.length ).toBeGreaterThan( 0 );
-			}, `Couldn't install "${ searchTerm }".` );
+			}, `Couldn't install "${ pluginSlug }". No registered blocks detected.` );
 
 			// check to see if it errored.
 			if ( jsError ) {
