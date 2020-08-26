@@ -35,7 +35,7 @@ jobs:
         name: Screenshots
         path: screenshots/
     - name: WordPress.org Plugin Directory Callback
-      if: ${{ steps.testRunDirectory.outputs }}
+      if: ${{ always() }}
       run: curl "$API_ENDPOINT" -s -H "$AUTH_HEADER" -H "$CONTENT_TYPE" -d "$POST_PAYLOAD"
       env:
         API_ENDPOINT: "https://wordpress.org/plugins/wp-json/plugins/v1/plugin/${{ github.event.client_payload.slug }}/e2e"
