@@ -201,6 +201,11 @@ function observeConsoleLogging() {
 			text
 		);
 
+		// Suffix the file to 404 failure errors.
+		if ( text.includes( 'Failed to load resource' ) ) {
+			text += " " + message.location().url;
+		}
+
 		// Disable reason: We intentionally bubble up the console message
 		// which, unless the test explicitly anticipates the logging via
 		// @wordpress/jest-console matchers, will cause the intended test
