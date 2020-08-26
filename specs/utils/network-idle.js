@@ -2,9 +2,8 @@ let inflight = 0;
 
 page.setRequestInterception( true );
 
-page.on( 'request', ( request ) => {
+page.on( 'request', () => {
 	inflight++;
-	request.continue();
 } );
 
 page.on( 'requestfinished', () => {
