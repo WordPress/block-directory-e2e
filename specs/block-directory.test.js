@@ -192,16 +192,15 @@ describe( `Block Directory Tests`, () => {
 
 			// check to see if it errored.
 			await expectWithMessage( () => {
-				if ( jsError ) {
-					throw new Error( `Javascript error: ${ jsError }` );
-				}
-			} );
+				expect( jsError ).toBeFalsy();
+			}, `Javascript error: ${ jsError }` );
 
 			// wait for the element to exist in the editor
-			await expectWithMessage(
-				page.waitForSelector(
-					`div[data-type="${ blocks[ 0 ].name }"]`
-				),
+			await expectWithMessage( async function () {
+					await page.waitForSelector(
+						`div[data-type="${ blocks[ 0 ].name }"]`
+					)
+				},
 				`Expected block "${ blocks[ 0 ].name }" not added to the document after install.`
 			);
 
