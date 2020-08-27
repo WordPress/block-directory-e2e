@@ -41,7 +41,7 @@ export const getInstalledBlocks = async () => {
  * @param {Function} func
  * @param {string} errorMessage
  */
-export const expectWithMessage = async ( func, errorMessage, captureErrorScreenshot = true ) => {
+export const expectWithMessage = async ( func, errorMessage = false, captureErrorScreenshot = true ) => {
 
 	try {
 		await func();
@@ -54,7 +54,12 @@ export const expectWithMessage = async ( func, errorMessage, captureErrorScreens
 		}
 
 		console.log( e );
-		throw new Error( errorMessage );
+
+		// If we have a specific error, throw that instead of the test failure.
+		if ( errorMessage ) {
+			throw new Error( errorMessage );
+		}
+		throw e;
 	}
 };
 
