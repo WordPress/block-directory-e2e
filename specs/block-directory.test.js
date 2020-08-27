@@ -191,20 +191,19 @@ describe( `Block Directory Tests`, () => {
 			}, `Couldn't install "${ pluginSlug }". No registered blocks detected.` );
 
 			// check to see if it errored.
-			if ( jsError ) {
-				throw new Error( jsError );
-			}
+			await expectWithMessage( () => {
+				if ( jsError ) {
+					throw new Error( `Javascript error: ${ jsError }` );
+				}
+			} );
 
-			try {
-				// wait for the element to exist in the editor
-				await page.waitForSelector(
+			// wait for the element to exist in the editor
+			await expectWithMessage(
+				page.waitForSelector(
 					`div[data-type="${ blocks[ 0 ].name }"]`
-				);
-			} catch ( ex ) {
-				throw new Error(
-					'Block not added to the document after install'
-				);
-			}
+				),
+				`Expected block "${ blocks[ 0 ].name }" not added to the document after install.`
+			);
 
 			// Get a screenshot of the block.
 			try {
