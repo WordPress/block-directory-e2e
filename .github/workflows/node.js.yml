@@ -28,17 +28,11 @@ jobs:
     - name: Run End to End Tests
       id: testRunDirectory
       run: npm run test:e2e
+      env:
+        WPORG_SECRET: ${{ secrets.POST_SECRET }}
     - name: Upload screenshots to GitHub
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
       with:
         name: Screenshots
         path: screenshots/
-    - name: WordPress.org Plugin Directory Callback
-      if: ${{ always() }}
-      run: curl "$API_ENDPOINT" -s -H "$AUTH_HEADER" -H "$CONTENT_TYPE" -d "$POST_PAYLOAD"
-      env:
-        API_ENDPOINT: "https://wordpress.org/plugins/wp-json/plugins/v1/plugin/${{ github.event.client_payload.slug }}/e2e"
-        AUTH_HEADER: "Authorization: BEARER ${{ secrets.POST_SECRET }}"
-        CONTENT_TYPE: "Content-Type: application/json"
-        POST_PAYLOAD: ${{ toJSON( steps.testRunDirectory.outputs ) }}

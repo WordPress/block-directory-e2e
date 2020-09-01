@@ -16,7 +16,6 @@ import {
 	searchForBlock,
 	deactivatePlugin,
 	uninstallPlugin,
-	getEditedPostContent,
 } from '@wordpress/e2e-test-utils';
 
 /**
@@ -30,6 +29,10 @@ import {
 	getAllLoadedScripts,
 	getAllLoadedStyles,
 } from './utils';
+import {
+	wporgHttpCallback,
+	setOutput,
+} from './utils/wporg-callback';
 import { waitUntilNetworkIdle } from './utils/network-idle';
 
 // Filter browser requests.
@@ -82,7 +85,7 @@ Running Tests for "${ pluginSlug }"
 
 // Send the URL to this actions run
 if ( process.env.GITHUB_RUN_ID ) {
-	core.setOutput( 'lastRunURL', `https://github.com/${ process.env.GITHUB_REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID }` );
+	setOutput( 'lastRunURL', `https://github.com/${ process.env.GITHUB_REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID }` );
 }
 
 describe( `Block Directory Tests`, () => {
@@ -94,6 +97,8 @@ describe( `Block Directory Tests`, () => {
 	} );
 
 	afterAll( async () => {
+		await wporgHttpCallback( pluginSlug );
+
 		await deactivatePlugin( pluginSlug );
 		await uninstallPlugin( pluginSlug );
 	} );
@@ -140,10 +145,7 @@ describe( `Block Directory Tests`, () => {
 				)
 			 ).screenshot( { path: 'screenshots/searchResults.png' } )
 
-			core.setOutput(
-				'screenshotSearchResults',
-				await fs.readFile( 'screenshots/searchResults.png', { encoding: 'base64' } )
-			);
+			setOutput( 'screenshotSearchResults', 'file:screenshots/searchResults.png' );
 
 			// Add the block
 			await page.click( addBtnSelector );
@@ -212,20 +214,17 @@ describe( `Block Directory Tests`, () => {
 					)
 				 ).screenshot( { path: 'screenshots/block.png' } );
 
-				core.setOutput(
-					'screenshotBlock',
-					await fs.readFile( 'screenshots/block.png', { encoding: 'base64' } )
-				);
+				setOutput( 'screenshotBlock', 'file:screenshots/block.png' );
 			} catch ( e ) {
 				// Ignore any error here, the test should still succeed.
 			}
 
-			core.setOutput( 'error', '' );
-			core.setOutput( 'success', true );
+			setOutput( 'error', '' );
+			setOutput( 'success', true );
 		} catch ( e ) {
 			core.setFailed( e.message );
-			core.setOutput( 'error', jsError || e.message );
-			core.setOutput( 'success', false );
+			setOutput( 'error', jsError || e.message );
+			setOutput( 'success', false );
 
 			throw e;
 		}
@@ -253,8 +252,9 @@ describe( `Block Directory Tests`, () => {
 			( x ) => ! freshStyles.some( ( y ) => x.id === y.id )
 		);
 
-		core.setOutput( 'scripts', scriptDiff );
-		core.setOutput( 'styles', styleDiff );
-		core.setOutput( 'blocks', blocks );
+		setOutput( 'scripts', scriptDiff );
+		setOutput( 'styles', styleDiff );
+		setOutput( 'blocks', blocks );
 	} );
+
 } );
