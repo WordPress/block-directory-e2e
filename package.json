@@ -15,7 +15,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
-    "@wordpress/env": "^1.6.0",
+    "@wordpress/env": "^4.0.5",
     "jest": "^26.2.2",
     "node-fetch": "^2.6.0",
     "promise.any": "^2.0.1",
