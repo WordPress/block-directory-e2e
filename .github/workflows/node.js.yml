@@ -21,8 +21,6 @@ jobs:
       run: npm ci
     - name: Configure & Start Environment
       run: npm run wp-env start
-    - name: Modify folder permissions
-      run: docker exec -t $( docker ps -qf "name=tests" ) chmod -R 767 /var/www/html/wp-content
     - name: Create Screenshots Directory
       run: mkdir -p screenshots
     - name: Run End to End Tests
