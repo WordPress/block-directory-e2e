@@ -135,15 +135,15 @@ describe( `Block Directory Tests`, () => {
 			}, `We found no matching blocks for "${ pluginSlug }" in the directory.` );
 
 			const addBtnSelector =
-				'.block-directory-downloadable-blocks-list li:first-child button';
+				'.block-directory-downloadable-blocks-list button:first-child';
 			await page.waitForSelector( addBtnSelector );
 
 			// Output a screenshot of the Search Results for debugging.
 			await (
 				await page.$(
-					'.block-directory-downloadable-blocks-list li:first-child'
+					'.block-directory-downloadable-blocks-list button:first-child'
 				)
-			 ).screenshot( { path: 'screenshots/searchResults.png' } )
+			 ).screenshot( { path: 'screenshots/searchResults.png' } );
 
 			setOutput( 'screenshotSearchResults', 'file:screenshots/searchResults.png' );
 
@@ -157,7 +157,7 @@ describe( `Block Directory Tests`, () => {
 			await Promise.any( [
 				// This is the expected case, the inserter switched back to block-types-list.
 				page.waitForSelector(
-					'button.block-editor-block-types-list__item'
+					'button.block-editor-block-types-list-item'
 				),
 				// But in some cases the inserted block has a restricted set of "children",
 				// which interacts with the filter & Block Directory, so the add button
